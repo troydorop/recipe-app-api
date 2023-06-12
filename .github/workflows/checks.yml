@@ -10,7 +10,7 @@ jobs:
     steps:
       - name: Login to docker up
         uses: docker/login-action@v1
-        steps:
+        with:
           username: ${{ secrets.DOCKERHUB_USER }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
       - name: Checkout
