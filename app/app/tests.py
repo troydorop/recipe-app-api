@@ -1,11 +1,12 @@
-""" 
+"""
 Sample tests
 """
-from django.test import SingleTestCase
+from django.test import SimpleTestCase
 
 from app import calc
 
-class CalcTests(SingleTestCase):
+
+class CalcTests(SimpleTestCase):
     """Test the calc module."""
 
     def test_add_numbers(self):
