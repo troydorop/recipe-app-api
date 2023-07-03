@@ -8,6 +8,14 @@ from django.contrib.auth.models import (
     PermissionsMixin,
 )
 
+class UserManager(BaseUserManager):
+    """Manager for users."""
+
+    def create_user(self, email, password=None, **extra_field):
+          """Create, save and return a new user."""
+          user = self.model(email=email, **extra_field)
+          user.set_password(password)
+          user.save(using=self._db)
 
 class User(AbstractBaseUser, PermissionsMixin):
         """User in the system."""
@@ -15,5 +23,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         name = models.Charfield(max_length=255)
         is_active = models.BooleanField(default=True)
         is_staff = models.BooleanField(default=False)
+
+        objects = UserManager()
 
         USERNAME_FIELD = 'email'
