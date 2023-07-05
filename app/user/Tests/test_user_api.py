@@ -26,7 +26,7 @@ class PublicUserApiTests(TestCase):
         self.client = APIClient()
 
     def test_create_user_success(self):
-        """Test creating a suser is successful."""
+        """Test creating a user is successful."""
         payload = {
             'email': 'test@example.com',
             'password': 'testpass123',
@@ -109,8 +109,9 @@ class PublicUserApiTests(TestCase):
         self.assertEqual(res.status_code, status.HTTP_401_UNAUTHORIZED)
 
 
-class PrivateUserAPITests(TestCase):
+class PrivateUserApiTests(TestCase):
     """Test API requests that require authentication."""
+
     def setUp(self):
         self.user = create_user(
             email='test@example.com',
