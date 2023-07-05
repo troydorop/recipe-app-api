@@ -118,7 +118,7 @@ class PrivateUserAPITests(TestCase):
             name='Test Name',
         )
         self.client = APIClient()
-        self.cleint.force_athenticate(user=self.user)
+        self.client.force_authenticate(user=self.user)
 
     def test_retrieve_profile_success(self):
         """Test retrieving profile for logged in user."""
@@ -132,7 +132,7 @@ class PrivateUserAPITests(TestCase):
 
     def test_post_me_not_allowed(self):
         """Test POST is not allowed for the me endpoint"""
-        res = self.cleint.post(ME_URL, {})
+        res = self.client.post(ME_URL, {})
 
         self.assertEqual(res.status_code, status.HTTP_405_METHOD_NOT_ALLOWED)
 
@@ -140,7 +140,7 @@ class PrivateUserAPITests(TestCase):
         """Test updating the user profile for the authenticated user."""
         payload = {'name': 'Updated name', 'password': 'newpassword123'}
 
-        res = self.cleint.patch(ME_URL, payload)
+        res = self.client.patch(ME_URL, payload)
 
         self.user.refresh_from_db()
         self.assertEqual(self.user.name, payload['name'])
