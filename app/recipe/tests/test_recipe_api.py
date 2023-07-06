@@ -17,10 +17,6 @@ from recipe.serializers import (
     RecipeDetailSerializer,
 )
 
-def create_user(**params):
-    """Create and return a new user."""
-    return get_user_model().objects.create_user(**params)
-
 
 RECIPES_URL = reverse('recipe:recipe-list')
 
@@ -43,6 +39,11 @@ def create_recipe(user, **params):
 
     recipe = Recipe.objects.create(user=user, **defaults)
     return recipe
+
+
+def create_user(**params):
+    """Create and return a new user."""
+    return get_user_model().objects.create_user(**params)
 
 
 class PublicRecipeAPITests(TestCase):
@@ -98,15 +99,15 @@ class PrivateRecipeApiTests(TestCase):
         url = detail_url(recipe.id)
         res = self.client.get(url)
 
-        serialzer = RecipeDetailSerializer(recipe)
-        self.assertEqual(res.data, serialzer.data)
+        serializer = RecipeDetailSerializer(recipe)
+        self.assertEqual(res.data, serializer.data)
 
     def test_create_recipe(self):
         """Test creating a recipe."""
         payload = {
             'title': 'Sample Recipe',
             'time_minutes': 30,
-            'price': Decimal('5.99')
+            'price': Decimal('5.99'),
         }
         res = self.client.post(RECIPES_URL, payload)
 
@@ -132,6 +133,7 @@ class PrivateRecipeApiTests(TestCase):
         self.assertEqual(res.status_code, status.HTTP_200_OK)
         recipe.refresh_from_db()
         self.assertEqual(recipe.title, payload['title'])
+        self.assertEqual(recipe.link, original_link)
         self.assertEqual(recipe.user, self.user)
 
     def test_full_update(self):
@@ -148,7 +150,7 @@ class PrivateRecipeApiTests(TestCase):
             'link': 'https://example.com/new-recipe.pdf',
             'description': 'New recipe description.',
             'time_minutes': 10,
-            'price': Decimal('2.5'),
+            'price': Decimal('2.50'),
         }
         url = detail_url(recipe.id)
         res = self.client.put(url, payload)
@@ -160,7 +162,7 @@ class PrivateRecipeApiTests(TestCase):
         self.assertEqual(recipe.user, self.user)
 
     def test_update_user_returns_error(self):
-        """Test changing the recipe user reuslts in an error."""
+        """Test changing the recipe user results in an error."""
         new_user = create_user(email='user2@example.com', password='test123')
         recipe = create_recipe(user=self.user)
 
@@ -172,7 +174,7 @@ class PrivateRecipeApiTests(TestCase):
         self.assertEqual(recipe.user, self.user)
 
     def test_delete_recipe(self):
-        """Test deleting a recipe successful"""
+        """Test deleting a recipe successful."""
         recipie = create_recipe(user=self.user)
 
         url = detail_url(recipe.id)
