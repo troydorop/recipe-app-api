@@ -1,8 +1,7 @@
 """
 Tests for recipe APIs.
 """
-
-from decimal import DecimalException
+from decimal import Decimal
 
 from django.contrib.auth import get_user_model
 from django.test import TestCase
@@ -15,7 +14,9 @@ from core.models import Recipe
 
 from recipe.serializers import RecipeSerializer
 
+
 RECIPES_URL = reverse('recipe:recipe-list')
+
 
 def create_recipe(user, **params):
     """Create and return a sample recipe."""
@@ -31,19 +32,22 @@ def create_recipe(user, **params):
     recipe = Recipe.objects.create(user=user, **defaults)
     return recipe
 
+
 class PublicRecipeAPITests(TestCase):
-    """Test unauthenticated APIRequests."""
+    """Test unauthenticated API requests."""
     def setUp(self):
         self.client = APIClient()
 
-    def test_authrequired(self):
+
+    def test_auth_required(self):
         """Test auth is required to call API."""
         res = self.client.get(RECIPES_URL)
 
         self.assertEqual(res.status_code, status.HTTP_401_UNAUTHORIZED)
 
+
 class PrivateRecipeApiTests(TestCase):
-    """Test authenticate API requests."""
+    """Test authenticated API requests."""
 
     def setUp(self):
         self.client = APIClient()
@@ -54,7 +58,7 @@ class PrivateRecipeApiTests(TestCase):
         self.client.force_authenticate(self.user)
 
     def test_retrieve_recipes(self):
-        """Test retreiving a list of recipes."""
+        """Test retrieving a list of recipes."""
         create_recipe(user=self.user)
         create_recipe(user=self.user)
 
@@ -77,6 +81,6 @@ class PrivateRecipeApiTests(TestCase):
         res = self.client.get(RECIPES_URL)
 
         recipes = Recipe.objects.filter(user=self.user)
-        serialzer = RecipeSerializer(recipes, many=True)
+        serializer = RecipeSerializer(recipes, many=True)
         self.assertEqual(res.status_code, status.HTTP_200_OK)
         self.assertEqual(res.data, serializer.data)
