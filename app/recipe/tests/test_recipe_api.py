@@ -102,4 +102,4 @@ class PrivateRecipeApiTests(TestCase):
         res = self.client.get(url)
 
         serialzer = RecipeDetailSerializer(recipe)
-        self.assertEqua;(res.data, serialzer.data)
+        self.assertEqual(res.data, serialzer.data)
