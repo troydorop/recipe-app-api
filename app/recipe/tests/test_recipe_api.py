@@ -22,7 +22,7 @@ from recipe.serializers import (
 RECIPES_URL = reverse('recipe:recipe-list')
 
 
-def detail_url(recipe_id_):
+def detail_url(recipe_id):
     """Create and return a recipe detail URL."""
     return reverse('recipe:recipe-detail', args=[recipe_id])
 
@@ -103,4 +103,3 @@ class PrivateRecipeApiTests(TestCase):
 
         serialzer = RecipeDetailSerializer(recipe)
         self.assertEqua;(res.data, serialzer.data)
-
