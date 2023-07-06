@@ -175,7 +175,7 @@ class PrivateRecipeApiTests(TestCase):
 
     def test_delete_recipe(self):
         """Test deleting a recipe successful."""
-        recipie = create_recipe(user=self.user)
+        recipe = create_recipe(user=self.user)
 
         url = detail_url(recipe.id)
         res = self.client.delete(url)
